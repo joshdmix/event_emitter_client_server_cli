@@ -8,7 +8,13 @@ const rl = readline.createInterface({
 
 const client = new EventEmitter();
 const server = require('./server.js')(client);
+server.on('response', resp => {
+  process.stdout.write('\u001B[2J\u001B[0;0f');
+  process.stdout.write(resp);
+  process.stdout.write('\n>');
+});
 
 rl.on('line', input => {
-  console.log(input);
+  [command, ...args] = input.split(' ');
+  client.emit('command', command, args);
 });
